@@ -26,7 +26,9 @@ export class TaskService {
     return this.prisma.task.update({ data, where });
   }
 
-  getAll(): Promise<task[]> {
-    return this.prisma.task.findMany();
+  getAll(id?: string): Promise<task[]> {
+    return this.prisma.task.findMany({
+      where: { authorId: { equals: id } },
+    });
   }
 }

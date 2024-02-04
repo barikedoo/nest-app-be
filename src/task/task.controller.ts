@@ -18,8 +18,8 @@ export class TaskApiController {
   }
 
   @Get()
-  getAll() {
-    return this.taskService.getAll();
+  getAll(id?: string) {
+    return this.taskService.getAll(id);
   }
 
   @Put(':id')

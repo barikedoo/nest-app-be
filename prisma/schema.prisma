@@ -17,11 +17,13 @@ model task {
   // created_at DateTime @default(now())
   // finished Boolean @default(false)
   // finished_at DateTime?
+  authorId String
 }
 
 model user {
   id Int @default(autoincrement()) @id
   name String
   email String @unique
+  password String
   created_at DateTime @default(now())
 }
