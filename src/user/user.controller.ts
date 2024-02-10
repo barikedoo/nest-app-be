@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { Public } from 'src/auth/public.decorator';
 
 @Controller('api/users')
 export class UserController {
@@ -25,6 +26,7 @@ export class UserController {
   }
 
   @Post()
+  @Public()
   createUser(@Body() payload: CreateUserDto) {
     return this.userService.create(payload);
   }
