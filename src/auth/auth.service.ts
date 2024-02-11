@@ -1,6 +1,7 @@
 import { UserService } from './../user/user.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { compareHash } from 'src/utils/hashing';
 
 @Injectable()
 export class AuthService {
@@ -11,14 +12,15 @@ export class AuthService {
 
   async validateUser(email: string, pass: string) {
     const user = await this.userService.getByEmail(email);
+    const passMatch = await compareHash(pass, user?.password || '');
 
-    if (user && user.password === pass) {
+    if (passMatch) {
       delete user.password;
 
       return user;
     }
 
-    return null;
+    throw new HttpException('Invalid credentials', 401);
   }
 
   async login(user: any) {

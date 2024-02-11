@@ -1,5 +1,6 @@
 import { Controller, Get, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { Public } from './auth/public.decorator';
 
 @Controller()
 export class AppController {
@@ -13,8 +14,9 @@ export class AppController {
     return res.render('login', { title: 'Registration' });
   }
 
+  @Public()
   @Get()
-  showDefaultrPage(@Res() res: Response) {
+  showDefaultPage(@Res() res: Response) {
     return res.render('index', { title: 'Welcome to default page' });
   }
 }
