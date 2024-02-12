@@ -7,19 +7,16 @@
   <body>
 		<div>
 			<h1> {{ title }} </h1>
-			<form>
-				<label for="name">Username</label>
-				<input name="name">
-
+			<form action="/login" method="POST">
 				<label for="email">Email</label>
 				<input name="email">
 
 				<label for="password">Password</label>
 				<input name="password" type="password">
 
-				<label for="confirm">Confirm Password</label>
-				<input name="confirm" type="password">
+				<button type="submit">Login</button>
 			</form>
+			<a href="/">Back</a>
 		</div>
   </body>
 </html>
