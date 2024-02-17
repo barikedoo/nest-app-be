@@ -38,7 +38,13 @@ export class AuthViewsController {
   @Post('login')
   @Public()
   async login(@Body() body: LoginDto, @Res() res: Response) {
-    await this.authService.login(body);
+    const { access_token } = await this.authService.login(body);
+
+    res.cookie('Authorization', access_token, {
+      httpOnly: true,
+      path: '/',
+      maxAge: 3600000,
+    });
 
     return res.redirect('/login/success');
   }
