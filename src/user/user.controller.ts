@@ -8,8 +8,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
-import { Public } from 'src/auth/public.decorator';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('api/users')
 export class UserController {
