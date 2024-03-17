@@ -4,10 +4,21 @@ import { Prisma, task } from '@prisma/client';
 
 @Injectable()
 export class TaskService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+    //
+  }
 
-  create(data: Prisma.taskCreateInput): Promise<task> {
-    return this.prisma.task.create({ data });
+  create(payload): Promise<task> {
+    console.log({ payload });
+    return this.prisma.task.create({
+      data: {
+        title: payload.title,
+        description: payload.description,
+        author: {
+          connect: { id: payload.authorId },
+        },
+      },
+    });
   }
 
   delete(where: Prisma.taskWhereUniqueInput): Promise<task> {
@@ -26,9 +37,9 @@ export class TaskService {
     return this.prisma.task.update({ data, where });
   }
 
-  getAll(id?: string): Promise<task[]> {
+  getAll(authorId?: string): Promise<task[]> {
     return this.prisma.task.findMany({
-      where: { authorId: parseInt(id) },
+      where: { authorId: Number(authorId) },
     });
   }
 }

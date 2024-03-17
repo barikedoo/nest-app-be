@@ -19,3 +19,13 @@ async function bootstrap() {
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
+
+// Temporary put here
+declare module 'Express' {
+  export interface Request {
+    user?: {
+      id: string;
+      email: string;
+    };
+  }
+}

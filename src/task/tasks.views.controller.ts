@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Param, Body, Res, Req } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { CreateTaskDto } from './task.dto';
+import { CreateTaskDto } from './dto/task.dto';
 import { Response, Request } from 'express';
 
 @Controller('tasks')
@@ -23,7 +23,7 @@ export class TaskTemplateController {
   ) {
     const task = await this.taskService.create({
       ...body,
-      author: req.user,
+      authorId: Number(req.user.id),
     });
 
     return res.redirect(`/tasks/${task.id}`);

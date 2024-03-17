@@ -14,9 +14,9 @@ model task {
   id          Int     @id @default(autoincrement())
   title       String
   description String?
-  // created_at DateTime @default(now())
-  // finished Boolean @default(false)
-  // finished_at DateTime?
+  created_at DateTime @default(now())
+  finished Boolean @default(false)
+  finished_at DateTime?
   author      user    @relation(fields: [authorId], references: [id])
   authorId    Int
 }

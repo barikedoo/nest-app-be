@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Param, Body, Put, Req } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { CreateTaskDto } from './task.dto';
+import { CreateTaskDto } from './dto/task.dto';
 import { Request } from 'express';
 
 @Controller('api/tasks')
@@ -8,8 +8,8 @@ export class TaskApiController {
   constructor(private taskService: TaskService) {}
 
   @Post()
-  create(@Body() body: CreateTaskDto, @Req() req: Request) {
-    return this.taskService.create({ ...body, author: req.user });
+  create(@Body() body: CreateTaskDto, @Req() req) {
+    return this.taskService.create({ ...body, authorId: Number(req.user.id) });
   }
 
   @Get(':id')
@@ -18,8 +18,8 @@ export class TaskApiController {
   }
 
   @Get()
-  getAll(id?: string) {
-    return this.taskService.getAll(id);
+  getAll(@Req() req: Request) {
+    return this.taskService.getAll(req.user.id);
   }
 
   @Put(':id')

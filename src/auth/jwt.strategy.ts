@@ -7,17 +7,15 @@ import { jwtConstants } from './constants';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (req) => req.cookies.Authorization,
-      ]),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: jwtConstants.secret,
     });
   }
 
-  async validate(payload: any) {
-    // TODO: Add validation here? Expiration token?
-
+  // TODO: Add validation here? Expiration token?
+  async validate(payload): Promise<{ id: string; username: string }> {
+    // Here we define what goes to injected request.user property
     return { id: payload.id, username: payload.email };
   }
 }
