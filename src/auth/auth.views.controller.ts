@@ -1,9 +1,16 @@
-import { Controller, Get, Post, Res, UseGuards, Body } from '@nestjs/common';
-import { Response } from 'express';
+import {
+  Controller,
+  Get,
+  Post,
+  Res,
+  UseGuards,
+  Body,
+  Req,
+} from '@nestjs/common';
+import { Response, Request } from 'express';
 import { Public } from './decorators/public.decorator';
 import { UserService } from 'src/user/user.service';
 import { LocalAuthGuard } from './local.auth.guard';
-import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto/user.dto';
 
@@ -26,7 +33,6 @@ export class AuthViewsController {
   @Get('login/success')
   @Public()
   showLoginSuccessPage(@Res() res: Response) {
-    console.log(res);
     return res.render('success', {
       title: 'Login Success',
       message: `<p>You have successfully logged in. Here is your token</p>`,
@@ -37,8 +43,8 @@ export class AuthViewsController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @Public()
-  async login(@Body() body: LoginDto, @Res() res: Response) {
-    const { access_token } = await this.authService.login(body);
+  async login(@Res() res: Response, @Req() req: Request) {
+    const { access_token } = await this.authService.login(req.user);
 
     res.cookie('Authorization', access_token, {
       httpOnly: true,

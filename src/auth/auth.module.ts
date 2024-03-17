@@ -26,7 +26,7 @@ import { AuthViewsController } from './auth.views.controller';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '60m' },
     }),
   ],
   controllers: [AuthController, AuthViewsController],

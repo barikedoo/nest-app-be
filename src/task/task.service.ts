@@ -28,7 +28,7 @@ export class TaskService {
 
   getAll(id?: string): Promise<task[]> {
     return this.prisma.task.findMany({
-      where: { authorId: { equals: id } },
+      where: { authorId: parseInt(id) },
     });
   }
 }
