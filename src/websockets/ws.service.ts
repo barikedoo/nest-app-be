@@ -2,28 +2,33 @@ import { Injectable } from '@nestjs/common'
 import { WebSocketGateway, OnGatewayInit } from '@nestjs/websockets'
 import * as WebSocket from 'ws'
 
+const WS_PING_INTERVAL = 25000
 interface IWsParams {
   url: string
   extendConnectionInterval?: number
   handlers?: {
     [eventName: string]: (data: any) => void
   }
+  onMessage?: (data: any) => void
 }
 @Injectable()
 @WebSocketGateway()
 export class ExternalWsGatewayService implements OnGatewayInit {
   private ws: WebSocket
   private url: string
-  private extendConnectionInterval: number = 25000 // in ms
+  private onMessage: (data) => void
+  private extendConnectionInterval: number // in ms
   private handlers: Record<string, (data) => void> = {}
   private extendConnectionTimer: NodeJS.Timeout
 
   init(params: IWsParams) {
     this.url = params.url
     this.handlers = params.handlers
+    this.extendConnectionInterval =
+      params.extendConnectionInterval || WS_PING_INTERVAL
 
-    console.log('WS after init')
     this.ws = new WebSocket(this.url)
+    this.onMessage = params.onMessage
 
     for (const eventName in this.handlers) {
       this.ws.on(eventName, this.handlers[eventName])
@@ -40,8 +45,8 @@ export class ExternalWsGatewayService implements OnGatewayInit {
     })
 
     this.ws.on('message', (data) => {
-      console.log('Received data:', data.toString())
       // Handle the ticker information here
+      this.onMessage(data)
     })
 
     this.ws.on('close', () => {

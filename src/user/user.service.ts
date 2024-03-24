@@ -10,8 +10,6 @@ export class UserService {
   async create(payload: CreateUserDto) {
     const alreadyExists = await this.getByEmail(payload.email)
 
-    console.log({ alreadyExists, payload })
-
     if (alreadyExists) throw new HttpException('User already exists', 409)
 
     const data = {

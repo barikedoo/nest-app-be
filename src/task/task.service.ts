@@ -9,7 +9,6 @@ export class TaskService {
   }
 
   create(payload): Promise<task> {
-    console.log({ payload })
     return this.prisma.task.create({
       data: {
         title: payload.title,

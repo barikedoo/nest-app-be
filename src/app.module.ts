@@ -7,7 +7,8 @@ import { AuthModule } from './auth/auth.module'
 import { HealthModule } from './health/health.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { WSModule } from './websockets/ws.module'
-import { OkxModule } from './okx/okx.module'
+import { OKXModule } from './okx/okx.module'
+import { TelegramModule } from './telegram/telegram.module'
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { OkxModule } from './okx/okx.module'
     HealthModule,
     PrismaModule,
     WSModule,
-    OkxModule,
+    OKXModule,
+    TelegramModule,
   ],
   providers: [PrismaService],
   controllers: [AppController],

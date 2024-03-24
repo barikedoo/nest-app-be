@@ -81,7 +81,6 @@ export class AuthViewsController {
 
       return res.redirect('/register/success')
     } catch (error) {
-      console.log({ error })
       return res.render('error', {
         title: 'User already exists',
         error: 'Please use different email',
