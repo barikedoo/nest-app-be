@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
-import { Public } from 'src/auth/decorators/public.decorator';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { UserService } from './user.service'
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto'
+import { Public } from 'src/auth/decorators/public.decorator'
 
 @Controller('api/users')
 export class UserController {
@@ -17,27 +9,27 @@ export class UserController {
 
   @Get()
   getAllUsers() {
-    return this.userService.getAll();
+    return this.userService.getAll()
   }
 
   @Get(':id')
   getUserById(@Param('id') id: number) {
-    return this.userService.getBydId(Number(id));
+    return this.userService.getBydId(Number(id))
   }
 
   @Post()
   @Public()
   createUser(@Body() payload: CreateUserDto) {
-    return this.userService.create(payload);
+    return this.userService.create(payload)
   }
 
   @Put(':id')
   updateUser(@Param('id') id: number, @Body() payload: UpdateUserDto) {
-    return this.userService.update(Number(id), payload);
+    return this.userService.update(Number(id), payload)
   }
 
   @Delete(':id')
   deleteUser(@Param('id') id: number) {
-    return this.userService.delete(Number(id));
+    return this.userService.delete(Number(id))
   }
 }

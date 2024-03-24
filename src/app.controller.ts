@@ -1,6 +1,6 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import { Public } from './auth/decorators/public.decorator';
-import { Response } from 'express';
+import { Controller, Get, Res } from '@nestjs/common'
+import { Public } from './auth/decorators/public.decorator'
+import { Response } from 'express'
 
 @Controller()
 export class AppController {
@@ -8,6 +8,6 @@ export class AppController {
   @Public()
   @Get()
   showDefaultPage(@Res() res: Response) {
-    return res.render('index', { title: 'Welcome to home page' });
+    return res.render('index', { title: 'Welcome to home page' })
   }
 }
