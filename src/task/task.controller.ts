@@ -1,7 +1,6 @@
 import { Controller, Post, Get, Param, Body, Put, Req } from '@nestjs/common'
 import { TaskService } from './task.service'
 import { CreateTaskDto } from './dto/task.dto'
-import { Request } from 'express'
 
 @Controller('api/tasks')
 export class TaskApiController {
@@ -18,7 +17,7 @@ export class TaskApiController {
   }
 
   @Get()
-  getAll(@Req() req: Request) {
+  getAll(@Req() req) {
     return this.taskService.getAll(req.user.id)
   }
 
