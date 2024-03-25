@@ -34,17 +34,6 @@ export default {
   })]: (data) => {
     console.log('Liquidation signal', data)
   },
-  [JSON.stringify({
-    op: 'subscribe',
-    args: [
-      {
-        channel: 'liquidation-orders',
-        instType: 'SWAP',
-      },
-    ],
-  })]: (data) => {
-    console.log('Liquidation signal', data)
-  },
   // Open Interest
   // [JSON.stringify({
   //   op: 'subscribe',
