@@ -32,5 +32,5 @@ function formatLiquidationMessage(data) {
 
   const { s: instrument, S: side, z: size, o: type, p: price } = data?.o
 
-  return `Binance: Liquidation: ${instrument} ${type}. ${side.toUpperCase()}. Total loss: ${calcTotalLoss(data)} USDT. ${side.toUpperCase()} ${size} at price: ${price} USDT.`
+  return `Binance: Liquidation: ${instrument} ${type}. ${side.toUpperCase()}. Total loss: ${calcTotalLoss(data).toFixed(2)} USDT. ${side.toUpperCase()} ${size} at price: ${price} USDT.`
 }

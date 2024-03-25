@@ -10,7 +10,7 @@ export const checkIfMessagedShouldBeIgnored = (data) => {
   if (
     data === 'pong' ||
     ['subscribe', 'unsubscribe'].includes(data?.event) ||
-    getLiquidationDetails(data)?.bkLoss === '0'
+    Number(getLiquidationDetails(data)?.bkLoss) <= -10000
   ) {
     return true
   }
@@ -47,5 +47,5 @@ function formatLiquidationMessage(data) {
   const { bkLoss, bkPx, posSide, side, sz } = details
   const { instFamily, instType } = instrument
 
-  return `OKX: Liquidation: ${instFamily} ${instType}. ${posSide.toUpperCase()}. Total loss: ${bkLoss} USDT. ${side.toUpperCase()} ${sz} at price: ${bkPx} USDT.`
+  return `OKX: Liquidation: ${instFamily} ${instType}. ${posSide.toUpperCase()}. Total loss: ${Number(bkLoss).toFixed(2)} USDT. ${side.toUpperCase()} ${sz} at price: ${bkPx} USDT.`
 }
