@@ -7,15 +7,11 @@ export const toJson = (data: string) => {
 }
 
 export const checkIfMessagedShouldBeIgnored = (data) => {
-  if (
+  return (
     data === 'pong' ||
     ['subscribe', 'unsubscribe'].includes(data?.event) ||
-    Number(getLiquidationDetails(data)?.bkLoss) <= -10000
-  ) {
-    return true
-  }
-
-  return false
+    getTotalLoss(data) <= 10000
+  )
 }
 
 function getLiquidationDetails(data) {
@@ -38,14 +34,22 @@ export function formatWsMessage(data) {
   }
 }
 
+function getTotalLoss(data) {
+  const { bkPx, sz } = getLiquidationDetails(data) || {}
+
+  if (!bkPx || !sz) return 0
+
+  return +bkPx * +sz
+}
+
 function formatLiquidationMessage(data) {
   const instrument = data?.data?.[0]
   const details = getLiquidationDetails(data)
 
   if (!details || !instrument) return 'Cannot format liquidation message'
 
-  const { bkLoss, bkPx, posSide, side, sz } = details
+  const { bkPx, posSide, side, sz } = details
   const { instFamily, instType } = instrument
 
-  return `OKX: Liquidation: ${instFamily} ${instType}. ${posSide.toUpperCase()}. Total loss: ${Number(bkLoss).toFixed(2)} USDT. ${side.toUpperCase()} ${sz} at price: ${bkPx} USDT.`
+  return `OKX: Liquidation: ${instFamily} ${instType}. ${posSide.toUpperCase()}. Total loss: ${getTotalLoss(data).toFixed(2)} USDT. ${side.toUpperCase()} ${sz} at price: ${bkPx} USDT.`
 }
