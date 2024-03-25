@@ -10,7 +10,7 @@ export const checkIfMessagedShouldBeIgnored = (data) => {
   return (
     data === 'pong' ||
     ['subscribe', 'unsubscribe'].includes(data?.event) ||
-    getTotalLoss(data) <= 10000
+    getTotalLoss(data) <= 100000
   )
 }
 

@@ -8,7 +8,7 @@ export const toJson = (data: string) => {
 
 export function checkIfMessagedShouldBeIgnored(data) {
   // Ignore if no event is specified or total loss is less than 100 USDT
-  return !data.e || calcTotalLoss(data) <= 50000
+  return !data.e || calcTotalLoss(data) <= 100000
 }
 
 function calcTotalLoss(data) {
