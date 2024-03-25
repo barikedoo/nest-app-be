@@ -1,4 +1,4 @@
-const toJson = (data: string) => {
+export const toJson = (data: string) => {
   try {
     return JSON.parse(data)
   } catch (error) {
@@ -8,8 +8,8 @@ const toJson = (data: string) => {
 
 export const checkIfMessagedShouldBeIgnored = (data) => {
   if (
-    toJson(data) === 'pong' ||
-    ['subscribe', 'unsubscribe'].includes(toJson(data)?.event) ||
+    data === 'pong' ||
+    ['subscribe', 'unsubscribe'].includes(data?.event) ||
     getLiquidationDetails(data)?.bkLoss === '0'
   ) {
     return true
@@ -19,11 +19,11 @@ export const checkIfMessagedShouldBeIgnored = (data) => {
 }
 
 function getLiquidationDetails(data) {
-  return toJson(data)?.data?.[0]?.details?.[0]
+  return data?.data?.[0]?.details?.[0]
 }
 
 function getMessageChannel(data) {
-  return toJson(data).arg?.channel
+  return data.arg?.channel
 }
 
 export function formatWsMessage(data) {
@@ -39,7 +39,7 @@ export function formatWsMessage(data) {
 }
 
 function formatLiquidationMessage(data) {
-  const instrument = toJson(data)?.data?.[0]
+  const instrument = data?.data?.[0]
   const details = getLiquidationDetails(data)
 
   if (!details || !instrument) return 'Cannot format liquidation message'
@@ -47,5 +47,5 @@ function formatLiquidationMessage(data) {
   const { bkLoss, bkPx, posSide, side, sz } = details
   const { instFamily, instType } = instrument
 
-  return `Liquidation: ${instFamily} ${instType}. ${posSide.toUpperCase()}. Total loss: ${bkLoss} USDT. ${side.toUpperCase()} ${sz} at price: ${bkPx} USDT.`
+  return `OKX: Liquidation: ${instFamily} ${instType}. ${posSide.toUpperCase()}. Total loss: ${bkLoss} USDT. ${side.toUpperCase()} ${sz} at price: ${bkPx} USDT.`
 }

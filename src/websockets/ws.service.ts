@@ -2,14 +2,12 @@ import { Injectable } from '@nestjs/common'
 import { WebSocketGateway, OnGatewayInit } from '@nestjs/websockets'
 import * as WebSocket from 'ws'
 
-const WS_PING_INTERVAL = 25000
 interface IWsParams {
   url: string
   extendConnectionInterval?: number
-  handlers?: {
-    [eventName: string]: (data: any) => void
-  }
-  onMessage?: (data: any) => void
+  onMessage: (data: any) => void
+  onConnected: () => void
+  onDisconnected: () => void
 }
 @Injectable()
 @WebSocketGateway()
@@ -17,48 +15,31 @@ export class ExternalWsGatewayService implements OnGatewayInit {
   private ws: WebSocket
   private url: string
   private onMessage: (data) => void
-  private extendConnectionInterval: number // in ms
-  private handlers: Record<string, (data) => void> = {}
-  private extendConnectionTimer: NodeJS.Timeout
+  private onConnected: () => void
+  private onDisconnected: () => void
 
-  init(params: IWsParams) {
+  configure(params: IWsParams) {
     this.url = params.url
-    this.handlers = params.handlers
-    this.extendConnectionInterval =
-      params.extendConnectionInterval || WS_PING_INTERVAL
-
-    this.ws = new WebSocket(this.url)
     this.onMessage = params.onMessage
-
-    for (const eventName in this.handlers) {
-      this.ws.on(eventName, this.handlers[eventName])
-    }
+    this.onConnected = params.onConnected
+    this.onDisconnected = params.onDisconnected
+    this.ws = new WebSocket(this.url)
 
     this.ws.on('open', () => {
-      console.log('Connected to WebSocket')
-
-      for (const eventName in this.handlers) {
-        this.ws.send(eventName)
-      }
-
-      this.keepConnectionAlive()
+      this.onConnected()
     })
 
     this.ws.on('message', (data) => {
-      // Handle the ticker information here
       this.onMessage(data)
     })
 
     this.ws.on('close', () => {
-      console.log('Disconnected from WebSocket')
-      clearInterval(this.extendConnectionTimer)
+      this.onDisconnected()
     })
   }
 
-  keepConnectionAlive() {
-    this.extendConnectionTimer = setInterval(() => {
-      this.ws.send('ping')
-    }, this.extendConnectionInterval)
+  send(payload) {
+    this.ws.send(payload)
   }
 
   afterInit() {}

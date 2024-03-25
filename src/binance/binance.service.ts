@@ -1,57 +1,43 @@
 import { ExternalWsGatewayService } from 'src/websockets/ws.service'
 import { Injectable } from '@nestjs/common'
-import okxSubscriptions from './okx.subscriptions'
 import { TelegramService } from 'src/telegram/telegram.service'
 import {
   formatWsMessage,
   checkIfMessagedShouldBeIgnored,
   toJson,
-} from './okx.helpers'
-
-const WS_PING_INTERVAL = 25000
+} from './binance.helpers'
 
 @Injectable()
-export class OKXService {
-  private extendConnectionInterval: number // in ms
-  private extendConnectionTimer: NodeJS.Timeout
-
+export class BinanceService {
   constructor(
     public ws: ExternalWsGatewayService,
     private telegramService: TelegramService
   ) {
     this.ws.configure({
-      url: 'wss://ws.okx.com:8443/ws/v5/public',
+      url: 'wss://fstream.binance.com/ws',
       onMessage: (data) => this.onMessage(data),
       onConnected: () => this.onConnected(),
       onDisconnected: () => this.onDisconnected(),
     })
-
-    this.extendConnectionInterval = WS_PING_INTERVAL
-  }
-
-  keepConnectionAlive() {
-    this.extendConnectionTimer = setInterval(() => {
-      this.ws.send('ping')
-    }, this.extendConnectionInterval)
   }
 
   onConnected() {
-    console.log('OKX Connected to WebSocket')
+    console.log('Binance Connected to WebSocket')
 
-    for (const eventName in okxSubscriptions) {
-      this.ws.send(eventName)
-    }
-
-    this.keepConnectionAlive()
+    this.ws.send(
+      JSON.stringify({
+        method: 'SUBSCRIBE',
+        params: ['!forceOrder@arr'],
+        id: Date.now(),
+      })
+    )
   }
 
   onDisconnected() {
-    console.log('OKX Disconnected from WebSocket')
-
-    clearInterval(this.extendConnectionTimer)
+    console.log('Binance Disconnected from WebSocket')
   }
 
-  onMessage(data: Buffer) {
+  onMessage(data) {
     const jsonData = toJson(data.toString())
 
     if (checkIfMessagedShouldBeIgnored(jsonData)) return

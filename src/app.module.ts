@@ -9,6 +9,7 @@ import { PrismaModule } from './prisma/prisma.module'
 import { WSModule } from './websockets/ws.module'
 import { OKXModule } from './okx/okx.module'
 import { TelegramModule } from './telegram/telegram.module'
+import { BinanceModule } from './binance/binance.module'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TelegramModule } from './telegram/telegram.module'
     WSModule,
     OKXModule,
     TelegramModule,
+    BinanceModule,
   ],
   providers: [PrismaService],
   controllers: [AppController],
